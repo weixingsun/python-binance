@@ -11,12 +11,13 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 
 class Client(object):
 
-    API_URL = 'https://api.binance.{}/api'
-    WITHDRAW_API_URL = 'https://api.binance.{}/wapi'
-    MARGIN_API_URL = 'https://api.binance.{}/sapi'
-    WEBSITE_URL = 'https://www.binance.{}'
-    FUTURES_URL = 'https://fapi.binance.{}/fapi'
-    FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
+    API_URL = 'https://{}/api'
+    WITHDRAW_API_URL = 'https://{}/wapi'
+    MARGIN_API_URL = 'https://{}/sapi'
+    WEBSITE_URL = 'https://{}'
+    FUTURES_URL = 'https://{}/fapi'
+    FUTURES_COIN_URL = "https://{}/dapi"
+
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
@@ -98,7 +99,7 @@ class Client(object):
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com'):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None, IP='api.binance.com'):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -110,12 +111,12 @@ class Client(object):
 
         """
 
-        self.API_URL = self.API_URL.format(tld)
-        self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(tld)
-        self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
-        self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
-        self.FUTURES_URL = self.FUTURES_URL.format(tld)
-        self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(tld)
+        self.API_URL = self.API_URL.format(IP)
+        self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(IP)
+        self.MARGIN_API_URL = self.MARGIN_API_URL.format(IP)
+        self.WEBSITE_URL = self.WEBSITE_URL.format(IP)
+        self.FUTURES_URL = self.FUTURES_URL.format(IP)
+        self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(IP)
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
@@ -224,7 +225,7 @@ class Client(object):
 
     def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
         uri = self._create_api_uri(path, signed, version)
-
+        print(method+" "+uri)
         return self._request(method, uri, signed, **kwargs)
 
     def _request_withdraw_api(self, method, path, signed=False, **kwargs):
