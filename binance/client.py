@@ -10,6 +10,7 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 
 
 class Client(object):
+    DEBUG = False
 
     API_URL = 'https://{}/api'
     WITHDRAW_API_URL = 'https://{}/wapi'
@@ -99,7 +100,7 @@ class Client(object):
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, IP='api.binance.com'):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None, IP='api.binance.com', DEBUG=False):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -112,6 +113,7 @@ class Client(object):
         """
 
         self.API_URL = self.API_URL.format(IP)
+        self.DEBUG = DEBUG
         self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(IP)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(IP)
         self.WEBSITE_URL = self.WEBSITE_URL.format(IP)
@@ -225,7 +227,8 @@ class Client(object):
 
     def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
         uri = self._create_api_uri(path, signed, version)
-        print(method+" "+uri)
+        if self.DEBUG:
+            print(method+" "+uri)
         return self._request(method, uri, signed, **kwargs)
 
     def _request_withdraw_api(self, method, path, signed=False, **kwargs):
