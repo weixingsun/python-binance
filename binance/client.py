@@ -11,7 +11,7 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 
 class Client(object):
     DEBUG = False
-
+    HTTPS = True
     API_URL = 'https://{}/api'
     WITHDRAW_API_URL = 'https://{}/wapi'
     MARGIN_API_URL = 'https://{}/sapi'
@@ -100,7 +100,7 @@ class Client(object):
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, IP='api.binance.com', DEBUG=False):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None, IP='api.binance.com', DEBUG=False, HTTPS=True):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -111,9 +111,16 @@ class Client(object):
         :type requests_params: dict.
 
         """
-
-        self.API_URL = self.API_URL.format(IP)
+        self.HTTPS = HTTPS
         self.DEBUG = DEBUG
+        if not HTTPS:
+            self.API_URL = self.API_URL.replace("s", "")
+            self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.replace("s", "")
+            self.MARGIN_API_URL = self.MARGIN_API_URL.replace("s", "")
+            self.WEBSITE_URL = self.WEBSITE_URL.replace("s", "")
+            self.FUTURES_URL = self.FUTURES_URL.replace("s", "")
+            self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.replace("s", "")
+        self.API_URL = self.API_URL.format(IP)
         self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(IP)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(IP)
         self.WEBSITE_URL = self.WEBSITE_URL.format(IP)
