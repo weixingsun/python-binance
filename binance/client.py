@@ -132,6 +132,7 @@ class Client(object):
         self.session = self._init_session()
         self._requests_params = requests_params
         self.response = None
+        self.rest_functions = {}
 
         # init DNS and SSL cert
         self.ping()
@@ -229,7 +230,14 @@ class Client(object):
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del(kwargs['data'])
 
-        self.response = getattr(self.session, method)(uri, **kwargs)
+        rest_fn = 1
+        try:
+            rest_fn = self.rest_functions[method]
+        except KeyError:
+            rest_fn = getattr(self.session, method)
+            print("init "+method)
+            self.rest_functions[method] = rest_fn
+        self.response = rest_fn(uri, **kwargs)
         return self._handle_response()
 
     def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
